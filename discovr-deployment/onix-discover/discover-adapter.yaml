@@ -107,7 +107,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp"
+            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp,medtroniclabs.org/sandbox_ccn_reference_registry"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
@@ -290,7 +290,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp"
+            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp,medtroniclabs.org/sandbox_ccn_reference_registry"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
