@@ -290,10 +290,10 @@ services:
       - JAVA_OPTS=-Xmx756m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
       # Our service's BPP identity — stamped onto outbound on_discover responses so
       # Onix-caller's simplekeymanager keyset lookup (by context.bppId) succeeds.
-      - DISCOVERY_BPP_ID=ohcnetwork/care_cnn_discover
+      - DISCOVERY_BPP_ID=ccn-beck-discover-bpp.ohc.network
       # Container-DNS URI: peers (e.g. CARE's adapters) reach us over the shared
       # beckn-network, so no public ingress is involved.
-      - DISCOVERY_BPP_URI=http://168.144.146.178/receiver/
+      - DISCOVERY_BPP_URI=http://discover.168.144.146.178.sslip.io/receiver/
       # Spatial engine: postgresql (default) or elasticsearch
       - DISCOVERY_SPATIAL_ENGINE=elasticsearch
       # Reject inbound intents whose intent.spatial.type doesn't match the

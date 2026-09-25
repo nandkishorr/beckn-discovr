@@ -62,7 +62,7 @@ plugins:
       dbDsn: "postgres://discover_user:discover_password@postgres:5432/discover_db?sslmode=disable"
       discoveryPushUrl: "http://catalog-publish:8080/beckn/catalog/push"
       participantId: "ccn-beck-discover-bpp.ohc.network"
-      bppUri: "http://168.144.146.178/"
+      bppUri: "http://discover.168.144.146.178.sslip.io/"
       networks: "beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
       indexIntervalSeconds: "300"
       catalogIntervalSeconds: "60"
@@ -120,7 +120,7 @@ modules:
             # parses cleanly on startup. Replace with real keys for production.
             # v1.7+ uses `subscriberId`; the old `networkParticipant` alias was deprecated.
             subscriberId: ccn-beck-discover-bpp.ohc.network
-            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            keyId: 76EU8dW3Pfx7uNRd7UfMjRecP9u1GGghbPKYz3w695rgkfLKNLWaSb
             signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
             signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
             encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
@@ -211,7 +211,7 @@ modules:
           id: simplekeymanager
           config:
             subscriberId: ccn-beck-discover-bpp.ohc.network
-            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            keyId: 76EU8dW3Pfx7uNRd7UfMjRecP9u1GGghbPKYz3w695rgkfLKNLWaSb
             signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
             signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
             encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
@@ -305,7 +305,7 @@ modules:
             # parses cleanly on startup. Replace with real keys for production.
             # v1.7+ uses `subscriberId`; the old `networkParticipant` alias was deprecated.
             subscriberId: ccn-beck-discover-bpp.ohc.network
-            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            keyId: 76EU8dW3Pfx7uNRd7UfMjRecP9u1GGghbPKYz3w695rgkfLKNLWaSb
             signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
             signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
             encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=

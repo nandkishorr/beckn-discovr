@@ -36,7 +36,7 @@ routingRules:
   - version: "2.0.0"
     targetType: "url"
     target:
-      url: "http://168.144.146.178/beckn/"
+      url: "http://catalog.168.144.146.178.sslip.io/beckn/"
       # final URL composition:
       #   /beckn + catalog/subscription → https://fabric.nfh.global/beckn/catalog/subscription
       #   /beckn + catalog/pull         → https://fabric.nfh.global/beckn/catalog/pull
