@@ -63,7 +63,7 @@ plugins:
       discoveryPushUrl: "http://catalog-publish:8080/beckn/catalog/push"
       participantId: "ccn-beck-discover-bpp.ohc.network"
       bppUri: "http://discover.168.144.146.178.sslip.io/"
-      networks: "beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
+      networks: "beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp"
       indexIntervalSeconds: "300"
       catalogIntervalSeconds: "60"
       fetchTimeoutSeconds: "30"
@@ -107,7 +107,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
+            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
@@ -290,7 +290,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
+            allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,ohc.network/care_bpp"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
