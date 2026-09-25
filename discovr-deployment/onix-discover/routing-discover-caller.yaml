@@ -36,7 +36,7 @@ routingRules:
   - version: "2.0.0"
     targetType: "url"
     target:
-      url: "https://fabric.nfh.global/beckn"
+      url: "http://168.144.146.178/beckn/"
       # final URL composition:
       #   /beckn + catalog/subscription → https://fabric.nfh.global/beckn/catalog/subscription
       #   /beckn + catalog/pull         → https://fabric.nfh.global/beckn/catalog/pull

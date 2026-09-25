@@ -175,8 +175,8 @@ services:
       - LOGGING_LEVEL_ORG_APACHE_KAFKA=ERROR
       - OTEL_TRACES_EXPORTER=none
       # ── Onix integration — our BPP identity stamped onto on_discover responses ──
-      - DISCOVERY_BPP_ID=
-      - DISCOVERY_BPP_URI=
+      - DISCOVERY_BPP_ID=ohcnetwork/care_cnn_discover
+      - DISCOVERY_BPP_URI=http://168.144.146.178/receiver/
       # Beckn Auth SDK — signature verification for /beckn/discover
       - SIGNATURE_AUTH_ENABLED=true
       - SIGNATURE_REGISTRY_BASE_URL=https://fabric.nfh.global/registry/dedi/lookup

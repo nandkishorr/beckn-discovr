@@ -96,6 +96,8 @@ services:
   discovery-kafka:
     image: bitnamilegacy/kafka:3.9.0
     container_name: discovery-kafka
+    # No arm64 manifest published; runs under emulation on Apple Silicon.
+    platform: linux/amd64
     ports:
       - "127.0.0.1:9093:9092" # VM-internal only
     environment:
@@ -130,7 +132,8 @@ services:
     image: redis:7-alpine
     container_name: discovery-redis
     ports:
-      - "127.0.0.1:6379:6379" # VM-internal only
+      # 6380 on the host to avoid clashing with a native/other-stack Redis on 6379.
+      - "127.0.0.1:6380:6379" # VM-internal only
     volumes:
       - redis_data:/data
     networks:
@@ -149,6 +152,8 @@ services:
     # onto the 1.7.0 release line for consistency with the other Discovr services.
     image: fidedocker/catalog-publish-job:1.7.0@sha256:3ea4951be85b1defeedff2142c0615197f0a11e02351ec83b1cef7aeb367bae9
     container_name: catalog-publish
+    # No arm64 manifest published; runs under emulation on Apple Silicon.
+    platform: linux/amd64
     expose:
       - "8080"
     environment:
@@ -251,6 +256,8 @@ services:
     # manually here since the VM has no Flyway migration Job like GKE).
     image: fidedocker/catalog-discover-job:1.7.0@sha256:522589e43f2b272148c48d27a617e200a90dce41766db1cd21f6cefb12851ce0
     container_name: catalog-discover-job
+    # No arm64 manifest published; runs under emulation on Apple Silicon.
+    platform: linux/amd64
     expose:
       - "8080"
     environment:
@@ -283,8 +290,10 @@ services:
       - JAVA_OPTS=-Xmx756m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
       # Our service's BPP identity — stamped onto outbound on_discover responses so
       # Onix-caller's simplekeymanager keyset lookup (by context.bppId) succeeds.
-      - DISCOVERY_BPP_ID=fabric.nfh.global
-      - DISCOVERY_BPP_URI=https://34.93.165.42.sslip.io/beckn/
+      - DISCOVERY_BPP_ID=ohcnetwork/care_cnn_discover
+      # Container-DNS URI: peers (e.g. CARE's adapters) reach us over the shared
+      # beckn-network, so no public ingress is involved.
+      - DISCOVERY_BPP_URI=http://168.144.146.178/receiver/
       # Spatial engine: postgresql (default) or elasticsearch
       - DISCOVERY_SPATIAL_ENGINE=elasticsearch
       # Reject inbound intents whose intent.spatial.type doesn't match the
@@ -357,6 +366,8 @@ services:
     # onto the 1.7.0 release line for consistency with the other Discovr services.
     image: fidedocker/response-dispatcher:1.7.0@sha256:a5023a077e13a641325995598a6ba42fe7726bed1f05fa39b6e8e127838d40e4
     container_name: response-dispatcher
+    # No arm64 manifest published; runs under emulation on Apple Silicon.
+    platform: linux/amd64
     expose:
       - "8080"
     environment:

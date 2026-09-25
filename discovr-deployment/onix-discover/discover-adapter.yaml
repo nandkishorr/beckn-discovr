@@ -61,9 +61,9 @@ plugins:
     config:
       dbDsn: "postgres://discover_user:discover_password@postgres:5432/discover_db?sslmode=disable"
       discoveryPushUrl: "http://catalog-publish:8080/beckn/catalog/push"
-      participantId: "fabric.nfh.global"
-      bppUri: "https://34.93.165.42.sslip.io/beckn/"
-      networks: "beckn.one/testnet,nfh.global/testnet"
+      participantId: "ccn-beck-discover-bpp.ohc.network"
+      bppUri: "http://168.144.146.178/"
+      networks: "beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
       indexIntervalSeconds: "300"
       catalogIntervalSeconds: "60"
       fetchTimeoutSeconds: "30"
@@ -91,7 +91,7 @@ modules:
       # fallback for ctx.SubID when reqpreprocessor doesn't populate from body.
       # MUST equal the simplekeymanager networkParticipant below + DISCOVERY_BPP_ID
       # env on catalog-discover-job + DeDi-registered subscriberId.
-      subscriberId: fabric.nfh.global
+      subscriberId: ccn-beck-discover-bpp.ohc.network
       httpClientConfig:
         maxIdleConns: 1000
         maxIdleConnsPerHost: 200
@@ -107,7 +107,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet"
+            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
@@ -119,12 +119,12 @@ modules:
             # LOCAL TESTING — dummy 32-byte zero-seed base64 so simplekeymanager
             # parses cleanly on startup. Replace with real keys for production.
             # v1.7+ uses `subscriberId`; the old `networkParticipant` alias was deprecated.
-            subscriberId: fabric.nfh.global
-            keyId: local-test-key-id
-            signingPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            signingPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+            subscriberId: ccn-beck-discover-bpp.ohc.network
+            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
+            encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            encrPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
         cache:
           id: cache
           config:
@@ -193,7 +193,7 @@ modules:
     handler:
       type: std
       role: bpp
-      subscriberId: fabric.nfh.global
+      subscriberId: ccn-beck-discover-bpp.ohc.network
       httpClientConfig:
         maxIdleConns: 1000
         maxIdleConnsPerHost: 200
@@ -210,12 +210,12 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            subscriberId: fabric.nfh.global
-            keyId: local-test-key-id
-            signingPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            signingPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+            subscriberId: ccn-beck-discover-bpp.ohc.network
+            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
+            encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            encrPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
         cache:
           id: cache
           config:
@@ -274,7 +274,7 @@ modules:
       type: std
       role: bpp
       # Same handler-level identity as receiver — single subscriber per Discovr instance.
-      subscriberId: fabric.nfh.global
+      subscriberId: ccn-beck-discover-bpp.ohc.network
       httpClientConfig:
         maxIdleConns: 1000
         maxIdleConnsPerHost: 200
@@ -290,7 +290,7 @@ modules:
             # Restrict signature verification to subscribers in these network memberships.
             # Uncomment + set comma-separated list to enforce; leave commented to accept any
             # subscriber the registry returns (no network-membership filtering).
-            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet"
+            # allowedNetworkIDs: "nfh.global/beckn-nodes,beckn.one/testnet,nfh.global/testnet,care/care_discover_bpp"
             timeout: 10
             retry_max: "3"
             retry_wait_min: "100ms"
@@ -304,12 +304,12 @@ modules:
             # LOCAL TESTING — dummy 32-byte zero-seed base64 so simplekeymanager
             # parses cleanly on startup. Replace with real keys for production.
             # v1.7+ uses `subscriberId`; the old `networkParticipant` alias was deprecated.
-            subscriberId: fabric.nfh.global
-            keyId: local-test-key-id
-            signingPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            signingPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPrivateKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-            encrPublicKey: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+            subscriberId: ccn-beck-discover-bpp.ohc.network
+            keyId: 76EU9CK1STZYVcS1nw5mTbKPxnv4DPR4avq3nyNVc8YvMu8Rfb8heY
+            signingPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            signingPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
+            encrPrivateKey: BMPY7SjPaE711TA3zMVlKy/zPwyq9tG/ec6HWTS6C3U=
+            encrPublicKey: C8vQoak9P7VPajTMALF4AsaM8ewJ+8viqOrs2tCdj20=
         cache:
           id: cache
           config:
