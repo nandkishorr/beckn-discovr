@@ -67,6 +67,16 @@ public class CatalogDocumentAssembler {
         return build(payloadNode, indexKey, networkIds, text(resourceNode, BecknFields.ID));
     }
 
+    /**
+     * Called from EsFailureConsumer for messages that carry the Item's networkIds — payload
+     * never stores networkId, so this must win over the payload-derived fallback above.
+     */
+    public Map<String, Object> assemble(JsonNode payloadNode, String indexKey, List<String> networkIds) {
+        JsonNode catalog = payloadNode.path(BecknFields.CATALOGS).path(0);
+        JsonNode resourceNode = catalog.path(BecknFields.RESOURCES).path(0);
+        return build(payloadNode, indexKey, networkIds, text(resourceNode, BecknFields.ID));
+    }
+
     // ── Core builder ─────────────────────────────────────────────────────────
 
     private Map<String, Object> build(JsonNode payloadNode, String schemaType, List<String> networkIds,

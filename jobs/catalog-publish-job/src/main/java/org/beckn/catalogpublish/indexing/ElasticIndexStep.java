@@ -206,7 +206,8 @@ public class ElasticIndexStep {
             Item item = itemById.get(failedDoc.resourceId());
             JsonNode payloadNode = item != null ? batch.payloadNodes().get(item.getId()) : null;
             String payloadJson = toJson(payloadNode);
-            failurePublisher.publishFailures(schemaType, payloadJson, List.of(failedDoc));
+            List<String> networkIds = item != null ? item.getNetworkIds() : List.of();
+            failurePublisher.publishFailures(schemaType, payloadJson, List.of(failedDoc), networkIds);
         });
     }
 

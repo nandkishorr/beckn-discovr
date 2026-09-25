@@ -33,10 +33,10 @@ public class EsFailurePublisher {
     }
 
     public void publishFailures(String indexKey, String payloadJson,
-                                List<BulkIndexResult.FailedDoc> failed) {
+                                List<BulkIndexResult.FailedDoc> failed, List<String> networkIds) {
         for (BulkIndexResult.FailedDoc doc : failed) {
             publish(new EsFailureMessage(doc.resourceId(), doc.catalogId(), indexKey,
-                    payloadJson, doc.reason(), Instant.now(), 1));
+                    payloadJson, doc.reason(), Instant.now(), 1, networkIds));
         }
     }
 

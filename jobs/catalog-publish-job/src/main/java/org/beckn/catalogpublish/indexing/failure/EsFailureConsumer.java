@@ -90,7 +90,9 @@ public class EsFailureConsumer {
 
         try {
             JsonNode payloadNode = mapper.readTree(msg.payload());
-            Map<String, Object> doc = assembler.assemble(payloadNode, msg.indexKey());
+            Map<String, Object> doc = msg.networkIds() != null && !msg.networkIds().isEmpty()
+                    ? assembler.assemble(payloadNode, msg.indexKey(), msg.networkIds())
+                    : assembler.assemble(payloadNode, msg.indexKey());
             BulkIndexResult result = bulkIndexService.index(msg.indexKey(), List.of(doc));
 
             if (result.hasFailures()) {
