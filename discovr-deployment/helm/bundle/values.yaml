@@ -107,6 +107,39 @@ kafka:
       protocol: PLAINTEXT
   controller:
     replicaCount: 1
+  provisioning:
+    enabled: true
+    topics:
+      - name: discovr.publish.in.requests
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.publish.out.events
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.publish.out.responses
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.publish.dlt.requests
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.publish.es.failures
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.publish.es.dlt
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.discover.in.requests
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.discover.out.responses
+        partitions: 1
+        replicationFactor: 1
+      - name: discovr.dispatcher.dlt.responses
+        partitions: 1
+        replicationFactor: 1
+  extraConfig: |-
+    message.max.bytes=10485760
+    replica.fetch.max.bytes=10485760
 
 # ---------------------------------------------------------------------------
 # Elasticsearch — Bitnami subchart. Single node, security disabled — fine for
@@ -141,6 +174,10 @@ redis:
 # catalog-discover-job
 # ---------------------------------------------------------------------------
 catalog-discover-job:
+  image:
+    repository: fidedocker/catalog-discover-job
+    tag: "1.7.0"
+    digest: "sha256:522589e43f2b272148c48d27a617e200a90dce41766db1cd21f6cefb12851ce0"
   probes:
     liveness: { enabled: true, path: /actuator/health/liveness, initialDelaySeconds: 60, periodSeconds: 30, timeoutSeconds: 5, failureThreshold: 3 }
     readiness: { enabled: true, path: /actuator/health/readiness, initialDelaySeconds: 30, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 3 }
@@ -155,19 +192,36 @@ catalog-discover-job:
     - { name: KAFKA_RESPONSE_TOPIC, value: *topic-discover-response }
     - { name: POSTGRES_HOST, value: *pg-host }
     - { name: POSTGRES_PORT, value: *pg-port }
-    - { name: POSTGRES_DATABASE, value: *pg-database }
-    - { name: POSTGRES_USERNAME, value: *pg-username }
+    - { name: POSTGRES_DB, value: *pg-database }
+    - { name: POSTGRES_USER, value: *pg-username }
     - { name: ES_HOSTS, value: *es-url }
     - { name: ES_ALIAS, value: *es-alias }
     - { name: DISCOVERY_SPATIAL_ENGINE, value: "elasticsearch" }
     - { name: DISCOVERY_TEXT_SEARCH_ENGINE, value: "native-els" }
-    - { name: SCHEMA_VALIDATION_ENABLED, value: "false" }
+    - { name: DISCOVERY_FILTER_ACTIVE_CATALOG, value: "true" }
+    - { name: DISCOVERY_FILTER_VALID_CATALOGS, value: "true" }
+    - { name: LEGACY_ACK_NACK_SUPPORT, value: "false" }
+    - { name: BECKN_PROTOCOL_API_SCHEMA_URL, value: "https://raw.githubusercontent.com/beckn/protocol-specifications-v2/refs/tags/core-v2.0.0-lts/api/v2.0.0/beckn.yaml" }
+    - { name: BECKN_API_PREFIX, value: "/beckn" }
+    - { name: SCHEMA_CACHE_TTL_HOURS, value: "24" }
+    - { name: DISCOVERY_SPATIAL_COORDINATE_CHECK_ENABLED, value: "true" }
+    - { name: ES_RESULT_LIMIT, value: "100" }
+    - { name: ES_MIN_SCORE, value: "0.68" }
+    - { name: DISCOVERY_FILTER_DISCARD_CATALOGS_WITHOUT_OFFERS, value: "true" }
+    - { name: DISCOVERY_PARALLEL_QUERY_TIMEOUT_SECONDS, value: "10" }
+    - { name: DISCOVERY_CHAIN_OVERFETCH_FACTOR, value: "10" }
+    - { name: DISCOVERY_CHAIN_MAX_IDS, value: "5000" }
+    - { name: DISCOVERY_CHAIN_TIMEOUT_SECONDS, value: "20" }
     - { name: SIGNATURE_AUTH_ENABLED, value: "false" }
 
 # ---------------------------------------------------------------------------
 # catalog-publish-job
 # ---------------------------------------------------------------------------
 catalog-publish-job:
+  image:
+    repository: fidedocker/catalog-publish-job
+    tag: "1.7.0"
+    digest: "sha256:3ea4951be85b1defeedff2142c0615197f0a11e02351ec83b1cef7aeb367bae9"
   probes:
     liveness: { enabled: true, path: /actuator/health/liveness, initialDelaySeconds: 60, periodSeconds: 30, timeoutSeconds: 5, failureThreshold: 3 }
     readiness: { enabled: true, path: /actuator/health/readiness, initialDelaySeconds: 30, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 3 }
@@ -175,9 +229,23 @@ catalog-publish-job:
   credentials: {}
   env:
     - { name: SPRING_PROFILES_ACTIVE, value: "docker" }
+    - { name: SPRING_FLYWAY_BASELINE_ON_MIGRATE, value: "true" }
+    - { name: SPRING_FLYWAY_BASELINE_VERSION, value: "0" }
+    - { name: SPRING_FLYWAY_TABLE, value: "flyway_schema_history_publish_no_dist" }
     - { name: APP_DATASOURCE_URL, value: *pg-jdbc-url }
     - { name: APP_DATASOURCE_USERNAME, value: *pg-username }
     - { name: APP_MESSAGING_BROKER_SERVERS, value: *kafka-bootstrap-servers }
+    - { name: APP_MESSAGING_TOPICS_INGESTION_REQUESTS, value: "discovr.publish.in.requests" }
+    - { name: APP_MESSAGING_TOPICS_CATALOG_EVENTS, value: "discovr.publish.out.events" }
+    - { name: APP_MESSAGING_TOPICS_RESPONSES, value: "discovr.publish.out.responses" }
+    - { name: APP_MESSAGING_TOPICS_FAILED, value: "discovr.publish.dlt.requests" }
+    - { name: KAFKA_MAX_REQUEST_SIZE, value: "10485760" }
+    - { name: KAFKA_MAX_PARTITION_FETCH_BYTES, value: "10485760" }
+    - { name: KAFKA_FETCH_MAX_BYTES, value: "52428800" }
+    - { name: CATALOG_MAX_PAYLOAD_SIZE, value: "10485760" }
+    - { name: APP_CATALOG_VALIDATION_ENABLED, value: "false" }
+    - { name: BECKN_PROTOCOL_API_SCHEMA_URL, value: "https://raw.githubusercontent.com/beckn/protocol-specifications-v2/refs/tags/core-v2.0.0-lts/api/v2.0.0/beckn.yaml" }
+    - { name: BECKN_API_PREFIX, value: "/beckn" }
     - { name: ES_HOSTS, value: *es-url }
     - { name: ES_MAPPING_TEMPLATE_FILE, value: "/config/es-index-template.json" }
     - { name: APP_CATALOG_ELASTICSEARCH_ALIAS_NAME, value: *es-alias }
@@ -187,6 +255,10 @@ catalog-publish-job:
 # response-dispatcher
 # ---------------------------------------------------------------------------
 response-dispatcher:
+  image:
+    repository: fidedocker/response-dispatcher
+    tag: "1.7.0"
+    digest: "sha256:a5023a077e13a641325995598a6ba42fe7726bed1f05fa39b6e8e127838d40e4"
   probes:
     liveness: { enabled: true, path: /actuator/health/liveness, initialDelaySeconds: 60, periodSeconds: 30, timeoutSeconds: 5, failureThreshold: 3 }
     readiness: { enabled: true, path: /actuator/health/readiness, initialDelaySeconds: 30, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 3 }
@@ -197,19 +269,31 @@ response-dispatcher:
     - { name: SPRING_KAFKA_BOOTSTRAP_SERVERS, value: *kafka-bootstrap-servers }
     - { name: TOPICS_INPUT, value: *topic-discover-response }
     - { name: TOPICS_DLT, value: *topic-dispatcher-dlt }
+    - { name: SPRING_KAFKA_CONSUMER_GROUP_ID, value: "seeker-notifier-group" }
+    - { name: SPRING_KAFKA_LISTENER_CONCURRENCY, value: "4" }
     # When onix-discover is enabled, response-dispatcher routes its outbound
     # on_discover through the adapter's caller endpoint rather than signing
     # and calling the BAP directly.
     - { name: SIGNING_ENABLED, value: "false" }
+    - { name: STATIC_CALLBACK_ENABLED, value: "true" }
+    - { name: STATIC_CALLBACK_URL, value: "http://discovr-onix-discover:8080/caller" }
+    - { name: CALLBACK_URL_VALIDATION_ENABLED, value: "false" }
 
 # ---------------------------------------------------------------------------
 # onix-discover — fronts the stack. subscriberId/registryUrl/credentials are
 # deployment-specific identity — never set here (see values/envs examples).
 # ---------------------------------------------------------------------------
 onix-discover:
+  image:
+    repository: fidedocker/onix-adapter
+    tag: "1.9.1"
+    digest: "sha256:d6883949095796e1a8e3a0a06c900f97672b6dcddafc4737456f569bc8075ebd"
   probes:
     liveness: { enabled: true }
     readiness: { enabled: true }
   adapter:
     cache:
       addr: *redis-addr
+    routing:
+      discoverJobUrl: "http://discovr-catalog-discover-job:8080/beckn/"
+      catalogPublishJobUrl: "http://discovr-catalog-publish-job:8080/beckn/"

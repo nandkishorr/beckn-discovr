@@ -1,0 +1,57 @@
+name: Release Discovr Helm chart
+
+on:
+  push:
+    tags:
+      - "helm-v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Package and publish chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Verify tag matches chart version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          chart_version="$(awk '$1 == "version:" { print $2; exit }' discovr-deployment/helm/bundle/Chart.yaml)"
+          expected_tag="helm-v${chart_version}"
+          if [ "$RELEASE_TAG" != "$expected_tag" ]; then
+            echo "Tag $RELEASE_TAG does not match chart version $chart_version (expected $expected_tag)" >&2
+            exit 1
+          fi
+
+      - name: Build chart dependencies
+        run: helm dependency build discovr-deployment/helm/bundle
+
+      - name: Lint chart
+        run: helm lint --with-subcharts discovr-deployment/helm/bundle
+
+      - name: Render chart
+        run: helm template discovr discovr-deployment/helm/bundle --namespace discovery > /tmp/discovr-rendered.yaml
+
+      - name: Package chart
+        run: helm package discovr-deployment/helm/bundle --destination dist
+
+      - name: Log in to GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GH_TOKEN" | helm registry login ghcr.io --username "${GITHUB_ACTOR}" --password-stdin
+
+      - name: Push chart to GHCR
+        run: helm push dist/discovr-*.tgz "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${GITHUB_REF_NAME}" dist/discovr-*.tgz --title "Discovr Helm chart ${GITHUB_REF_NAME#helm-v}" --generate-notes

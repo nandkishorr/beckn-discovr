@@ -49,6 +49,20 @@ since we don't control publishing a derivative of a third-party base image.
 
 ## Installing
 
+The release workflow publishes the chart as an OCI artifact in GHCR. After the
+package is public, install a pinned chart version directly (no `helm repo add`
+step is required):
+
+```bash
+helm install discovr oci://ghcr.io/nandkishorr/helm-charts/discovr \
+  --version 0.1.0 \
+  --namespace discovery --create-namespace \
+  -f discovr-deployment/helm/bundle/values.yaml \
+  -f discovr-deployment/helm/values/envs/my-deployment.yaml
+```
+
+For local development from this repository:
+
 ```bash
 cd discovr-deployment/helm/bundle
 helm dependency update
@@ -78,6 +92,29 @@ public repo intentionally stops at "here's the shape of what's needed."
 ```bash
 helm upgrade discovr . -f values.yaml -f ../values/envs/my-deployment.yaml
 ```
+
+## Releasing a chart
+
+`.github/workflows/release-helm-chart.yml` builds dependencies, lints and renders
+the umbrella chart, packages it, pushes it to GHCR, and attaches the package to a
+GitHub Release. To release version `0.1.0`, set `bundle/Chart.yaml`'s `version`
+to `0.1.0`, commit the change, and push the matching tag:
+
+```bash
+git tag helm-v0.1.0
+git push origin helm-v0.1.0
+```
+
+The GHCR package must be made public in the repository's Packages settings if
+KITE will pull it without GitHub credentials. For a private package, configure
+KITE with a token that has package read access. Use a new SemVer chart version
+for every release; tags must match `helm-v<chart-version>`.
+
+The chart uses Bitnami infrastructure dependencies. PostgreSQL requires a
+PostGIS-enabled image for the discover service's database features; configure
+that image or use an existing PostGIS database before deploying. Ingress
+controller, DNS, and TLS are cluster-level concerns and are not installed by
+this chart.
 
 A version bump is just an `image.tag` change in your private overlay —
 nothing in `bundle/values.yaml` or the charts needs to change for a routine
