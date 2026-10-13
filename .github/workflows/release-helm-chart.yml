@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "helm-v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing helm-v<version> tag to publish
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -22,7 +28,7 @@ jobs:
 
       - name: Verify tag matches chart version
         env:
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
         run: |
           chart_version="$(awk '$1 == "version:" { print $2; exit }' discovr-deployment/helm/bundle/Chart.yaml)"
           expected_tag="helm-v${chart_version}"
